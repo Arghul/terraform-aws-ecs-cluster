@@ -1,20 +1,23 @@
 variable "enable" {
-  type    = bool
-  default = true
+  description = "Enable resource?"
+  type        = bool
+  default     = true
 }
 
 variable "name" {
   description = "Service name"
+  type        = string
 }
 
 variable "namespace" {
   description = "Service namespace (eg: api, web, ops)"
+  type        = string
 }
 
 variable "stage" {
   description = "Stage, e.g. 'prod', 'staging', 'dev', OR 'source', 'build', 'test', 'deploy', 'release'"
   type        = string
-  default = ""
+  default     = ""
 }
 
 variable "environment" {
@@ -24,20 +27,20 @@ variable "environment" {
 
 variable "attributes" {
   description = "Additional attributes"
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "delimiter" {
   description = "Label delimiter"
-  type = string
-  default = "-"
+  type        = string
+  default     = "-"
 }
 
 variable "tags" {
   description = "Service tags"
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
 }
 
 variable "short_name" {
@@ -47,7 +50,7 @@ variable "short_name" {
 
 variable "vpc_id" {
   default = "VPC Id"
-  type = string
+  type    = string
 }
 
 variable "ami_owners" {
@@ -60,82 +63,98 @@ variable "ami_id" {
   default     = ""
 }
 
-variable "lookup_latest_ami" {
-  default = true
-}
-
 variable "root_block_device_type" {
-  default = "gp2"
+  description = "/ block device type"
+  type        = string
+  default     = "gp2"
 }
 
 variable "root_block_device_size" {
-  default = "8"
+  description = "/ block device size"
+  type        = string
+  default     = "8"
 }
 
 variable "ebs_optimized" {
-  description = ""
-  type = bool
-  default = false
+  description = "Whether instance is EBS optimized"
+  type        = bool
+  default     = false
 }
 
 variable "instance_type" {
-  default = "t2.micro"
+  description = "Instance type"
+  type        = string
+  default     = "t2.micro"
 }
 
 variable "spot_enable" {
-  description = ""
-  type = bool
-  default = false
+  description = "Enable spot instance"
+  type        = bool
+  default     = false
 }
 
 variable "spot_max_price" {
-  description = ""
-  type = string
-  default = "1"
+  description = "Spot instance bid max price"
+  type        = string
+  default     = "1"
 }
 
 variable "spot_instance_interruption_behavior" {
-  description = ""
-  type = string
-  default = "terminate"
+  description = "Spot instance interruption behavior"
+  type        = string
+  default     = "terminate"
 }
 
 variable "spot_instance_type" {
-  description = ""
-  type = string
-  default = "persistent"
+  description = "Spot instance type: persistent / one-time"
+  type        = string
+  default     = "persistent"
 }
 
 variable "cpu_credit_specification" {
-  default = "standard"
+  description = "CPU credit specification"
+  type        = string
+  default     = "standard"
 }
 
 variable "key_name" {
-  description = ""
-  type = string
+  description = "SSH key name"
+  type        = string
 }
 
 variable "detailed_monitoring" {
-  default = false
+  description = "Whether to enable detailed monitoring"
+  type        = string
+  default     = false
 }
 
 variable "health_check_grace_period" {
-  default = "600"
+  description = "Health check grace period"
+  type        = string
+  default     = "600"
 }
 
 variable "desired_capacity" {
-  default = "1"
+  description = "Instance group desired capacity"
+  type        = string
+  default     = "1"
 }
 
 variable "min_size" {
-  default = "1"
+  description = "Instance group minimum size"
+  type        = string
+  default     = "1"
 }
 
 variable "max_size" {
-  default = "1"
+  description = "Instance group maximum size"
+  type        = string
+  default     = "1"
 }
 
 variable "enabled_metrics" {
+  description = "Enabled metrics"
+  type        = list(string)
   default = [
     "GroupMinSize",
     "GroupMaxSize",
@@ -146,10 +165,9 @@ variable "enabled_metrics" {
     "GroupTerminatingInstances",
     "GroupTotalInstances",
   ]
-
-  type = list
 }
 
 variable "subnet_ids" {
-  type = list
+  description = "Subnet ids to start instances into"
+  type        = list(string)
 }

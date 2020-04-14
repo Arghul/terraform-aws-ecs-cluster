@@ -11,7 +11,7 @@ variable "delimiter" {
   default = "-"
 }
 variable "attributes" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
@@ -20,6 +20,6 @@ variable "region" {
 }
 
 variable "tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }

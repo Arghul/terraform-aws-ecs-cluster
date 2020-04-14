@@ -8,14 +8,14 @@ provider "aws" {
 
 
 module "ecs_cluster" {
-  source  = "../"
+  source = "../"
 
-  name = "ecs"
-  namespace = "arghul"
+  name        = "ecs"
+  namespace   = "arghul"
   environment = "prod"
 
-  key_name = "netf"
-  subnet_ids = [ "subnet-58f79f2e", "subnet-8ee658d6" ]
-  vpc_id = "vpc-2424bb40"
+  key_name   = "netf"
+  subnet_ids = ["subnet-58f79f2e", "subnet-8ee658d6"]
+  vpc_id     = "vpc-2424bb40"
 
 }

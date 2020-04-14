@@ -42,22 +42,22 @@ module "service_role" {
 # ECS resources
 resource "aws_ecs_cluster" "main" {
   count = var.enable ? 1 : 0
-  name = local.name
+  name  = local.name
 }
 
 
 # Security group resources
 resource "aws_security_group" "main" {
-  count  = var.enable ? 1 : 0
+  count = var.enable ? 1 : 0
 
   vpc_id = var.vpc_id
   name   = "${local.name}-sg"
 
-  tags   = var.tags
+  tags = var.tags
 }
 
 resource "aws_security_group_rule" "egress" {
-  count             = var.enable ? 1 :0
+  count             = var.enable ? 1 : 0
   type              = "egress"
   from_port         = 0
   to_port           = 65535
@@ -67,7 +67,7 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "ingress" {
-  count = var.enable ? 1 :0
+  count             = var.enable ? 1 : 0
   type              = "ingress"
   from_port         = 0
   to_port           = 65535
@@ -77,13 +77,13 @@ resource "aws_security_group_rule" "ingress" {
 }
 
 data "template_cloudinit_config" "main" {
-  count = var.enable ? 1 : 0
+  count         = var.enable ? 1 : 0
   gzip          = false
   base64_encode = false
 
   part {
     content_type = "text/cloud-config"
-    content = <<EOF
+    content      = <<EOF
 #cloud-config
 
 bootcmd:
@@ -115,9 +115,9 @@ data "aws_ami" "ecs_ami" {
 }
 
 data "aws_ami" "user_ami" {
-  count  = var.enable && var.ami_id != "" ? 1 : 0
+  count       = var.enable && var.ami_id != "" ? 1 : 0
   most_recent = true
-  owners = var.ami_owners
+  owners      = var.ami_owners
 
   filter {
     name   = "image-id"
@@ -128,7 +128,7 @@ data "aws_ami" "user_ami" {
 resource "aws_launch_template" "main" {
   count = var.enable ? 1 : 0
 
-  name_prefix = "${local.name}-"
+  name_prefix   = "${local.name}-"
   ebs_optimized = var.ebs_optimized
   block_device_mappings {
     device_name = var.ami_id == "" ? join("", data.aws_ami.ecs_ami.*.root_device_name) : join("", data.aws_ami.user_ami.*.root_device_name)
@@ -160,13 +160,13 @@ resource "aws_launch_template" "main" {
   user_data                            = base64encode(data.template_cloudinit_config.main[0].rendered)
 
   dynamic "instance_market_options" {
-    for_each = var.spot_enable ? [ 1 ] : []
+    for_each = var.spot_enable ? [1] : []
     content {
       market_type = "spot"
       spot_options {
-        max_price = var.spot_max_price
+        max_price                      = var.spot_max_price
         instance_interruption_behavior = var.spot_instance_interruption_behavior
-        spot_instance_type = var.spot_instance_type
+        spot_instance_type             = var.spot_instance_type
       }
     }
   }
