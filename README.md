@@ -58,5 +58,9 @@ module "ecs_cluster" {
 
 ## Outputs
 
-No output.
+| Name | Description |
+|------|-------------|
+| cluster\_id | n/a |
+| cluster\_name | n/a |
+| cluster\_security\_group\_id | n/a |
 
