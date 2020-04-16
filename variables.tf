@@ -108,7 +108,7 @@ variable "spot_instance_interruption_behavior" {
 variable "spot_instance_type" {
   description = "Spot instance type: persistent / one-time"
   type        = string
-  default     = "persistent"
+  default     = "one-time"
 }
 
 variable "cpu_credit_specification" {
