@@ -33,8 +33,7 @@ module "service_role" {
   allow_service = "ecs.amazonaws.com"
 
   policy_managed = [
-    "service-role/AmazonEC2ContainerServiceRole",
-    "AmazonSSMReadOnlyAccess"
+    "service-role/AmazonEC2ContainerServiceRole"
   ]
 
   tags = module.label.tags
