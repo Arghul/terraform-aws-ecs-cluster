@@ -54,7 +54,7 @@ resource "aws_security_group" "main" {
   vpc_id = var.vpc_id
   name   = "${local.name}-sg"
 
-  tags = var.tags
+  tags = module.label.tags
 }
 
 resource "aws_security_group_rule" "egress" {
