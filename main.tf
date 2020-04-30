@@ -37,13 +37,18 @@ module "service_role" {
     "service-role/AmazonEC2ContainerServiceRole"
   ]
 
-  tags = module.label.tags
+  tags = merge(module.label.tags, {
+    Name = "${local.name}-service-role"
+  })
 }
 
 # ECS resources
 resource "aws_ecs_cluster" "main" {
   count = var.enable ? 1 : 0
   name  = local.name
+  tags = merge(module.label.tags, {
+    Name = local.name
+  })
 }
 
 
@@ -54,7 +59,10 @@ resource "aws_security_group" "main" {
   vpc_id = var.vpc_id
   name   = "${local.name}-sg"
 
-  tags = module.label.tags
+  tags = merge(module.label.tags, {
+    Name = "${local.name}-sg"
+  })
+
 }
 
 resource "aws_security_group_rule" "egress" {
@@ -146,7 +154,6 @@ resource "aws_launch_template" "main" {
 
   disable_api_termination = false
 
-
   iam_instance_profile {
     name = module.instance_role.instance_profile_id
   }
@@ -175,10 +182,15 @@ resource "aws_launch_template" "main" {
   monitoring {
     enabled = var.detailed_monitoring
   }
+
+  tags = merge(module.label.tags, {
+    Name = "${local.name}-launch-template"
+  })
 }
 
 resource "aws_autoscaling_group" "main" {
   count = var.enable ? 1 : 0
+
   lifecycle {
     create_before_destroy = true
   }
@@ -200,11 +212,13 @@ resource "aws_autoscaling_group" "main" {
   vpc_zone_identifier       = var.subnet_ids
 
   dynamic "tag" {
-    for_each = module.label.tags
+    for_each = merge(module.label.tags, {
+      Name = "${local.name}-asg"
+    })
 
     content {
       key                 = tag.key
-      value               = tag.key == "Name" ? "${tag.value}-node" : tag.value
+      value               = tag.key == "Name" ? module.label.id : tag.value
       propagate_at_launch = true
     }
   }
