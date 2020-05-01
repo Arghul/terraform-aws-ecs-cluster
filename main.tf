@@ -15,28 +15,26 @@ module "label" {
 
 module "instance_role" {
   source = "git::https://github.com/netf/terraform-aws-iam-role.git?ref=master"
+
+  enabled = var.enable ? 1 : 0
   name   = "${local.name}-instance-role"
-
   allow_service = "ec2.amazonaws.com"
-
   policy_managed = [
     "service-role/AmazonEC2ContainerServiceforEC2Role",
     "AmazonSSMReadOnlyAccess"
   ]
-
   tags = module.label.tags
 }
 
 module "service_role" {
   source = "git::https://github.com/netf/terraform-aws-iam-role.git?ref=master"
+
+  enabled = var.enable ? 1 : 0
   name   = "${local.name}-service-role"
-
   allow_service = "ecs.amazonaws.com"
-
   policy_managed = [
     "service-role/AmazonEC2ContainerServiceRole"
   ]
-
   tags = merge(module.label.tags, {
     Name = "${local.name}-service-role"
   })
@@ -45,6 +43,7 @@ module "service_role" {
 # ECS resources
 resource "aws_ecs_cluster" "main" {
   count = var.enable ? 1 : 0
+
   name  = local.name
   tags = merge(module.label.tags, {
     Name = local.name
@@ -58,7 +57,6 @@ resource "aws_security_group" "main" {
 
   vpc_id = var.vpc_id
   name   = "${local.name}-sg"
-
   tags = merge(module.label.tags, {
     Name = "${local.name}-sg"
   })
@@ -159,8 +157,6 @@ resource "aws_launch_template" "main" {
   }
 
   image_id = var.ami_id == "" ? join("", data.aws_ami.ecs_ami.*.image_id) : join("", data.aws_ami.user_ami.*.image_id)
-
-
   instance_initiated_shutdown_behavior = "terminate"
   instance_type                        = var.instance_type
   key_name                             = var.key_name
@@ -184,7 +180,7 @@ resource "aws_launch_template" "main" {
   }
 
   tags = merge(module.label.tags, {
-    Name = "${local.name}-launch-template"
+    Name = "${local.name}-lt"
   })
 }
 
@@ -218,7 +214,7 @@ resource "aws_autoscaling_group" "main" {
 
     content {
       key                 = tag.key
-      value               = tag.key == "Name" ? module.label.id : tag.value
+      value               = tag.key == "Name" ? "${local.name}-instance" : tag.value
       propagate_at_launch = true
     }
   }
