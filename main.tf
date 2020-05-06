@@ -16,7 +16,7 @@ module "label" {
 module "instance_role" {
   source = "git::https://github.com/netf/terraform-aws-iam-role.git?ref=master"
 
-  enabled = var.enable ? 1 : 0
+  enabled = var.enable
   name   = "${local.name}-instance-role"
   allow_service = "ec2.amazonaws.com"
   policy_managed = [
@@ -29,7 +29,7 @@ module "instance_role" {
 module "service_role" {
   source = "git::https://github.com/netf/terraform-aws-iam-role.git?ref=master"
 
-  enabled = var.enable ? 1 : 0
+  enabled = var.enable
   name   = "${local.name}-service-role"
   allow_service = "ecs.amazonaws.com"
   policy_managed = [
