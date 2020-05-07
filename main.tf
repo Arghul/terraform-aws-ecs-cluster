@@ -21,7 +21,7 @@ module "instance_role" {
   allow_service = "ec2.amazonaws.com"
   policy_managed = [
     "service-role/AmazonEC2ContainerServiceforEC2Role",
-    "AmazonSSMReadOnlyAccess"
+    "AmazonSSMFullAccess" # TODO: reduce permissions (perhaps only for a particular namespace)
   ]
   tags = module.label.tags
 }
